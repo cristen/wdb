@@ -16,6 +16,7 @@ try:
 except ImportError:
     cut = None
 
+import difflib
 import os
 import sys
 import time
@@ -585,3 +586,14 @@ class Interaction(object):
         self.db.stepping = False
         self.db.stop_trace()
         sys.exit(1)
+
+    def do_reset(self, data):
+        self.db.send('Reset')
+
+    def do_diff(self, data):
+        todiff = data.split()
+        html = difflib.HtmlDiff(1).make_table(todiff[0], todiff[1])
+        self.db.send('Diff|%s' % dump({
+            'for': 'Diff Result',
+            'val': html
+        }))

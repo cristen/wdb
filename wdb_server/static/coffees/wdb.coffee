@@ -103,6 +103,8 @@ make_ws = ->
             when 'Ack'         then ack
             when 'Log'         then log
             when 'Die'         then die
+            when 'Reset'       then reset
+            when 'Diff'        then diff
         if not treat
             console.log 'Unknown command', cmd
         else
@@ -391,6 +393,8 @@ execute = (snippet) ->
             when 'q' then cmd 'Quit'
             when 'h' then print_help()
             when 'w' then cmd 'Watch|' + data
+            when 'x' then cmd 'Reset'
+            when 'a' then cmd 'Diff|' + data
         return
     else if snippet.indexOf('?') == 0
         cmd 'Dump|' + snippet.slice(1).trim()
@@ -425,6 +429,8 @@ print_help = ->
 .q                             : Quit
 .h                             : Get some help
 .e                             : Toggle file edition mode
+.x                             : Reset
+.a                             : Diff
 iterable!sthg                  : If cutter is installed, executes cut(iterable).sthg
 expr >! file                   : Write the result of expr in file
 !< file                        : Eval the content of file
@@ -508,6 +514,13 @@ breakunset = (data) ->
     if $eval.val().indexOf('.b ') == 0
         $eval.val('').prop('disabled', false).focus()
     chilling()
+
+reset = (data) ->
+    $('#scrollback').empty()
+    $('#eval').val('')
+
+diff = (data) ->
+    print for: 'Diff result', result: data.val
 
 toggle_break = (arg, temporary) ->
     cmd = if temporary then 'TBreak' else 'Break'
@@ -784,6 +797,7 @@ register_handlers = ->
     ).on('click', '.short.close', ->
         $(@).addClass('open').removeClass('close').next('.long').show('fast')
     ).on('click', '.long,.short.open', ->
+
         elt = if $(@).hasClass('long') then $(@) else $(@).next('.long')
         elt.hide('fast').prev('.short').removeClass('open').addClass('close')
     ).on('click', '.toggle', ->
