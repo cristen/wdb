@@ -1,4 +1,4 @@
-# *-* coding: utf-8 *-*
+
 from ._compat import (
     dumps, JSONEncoder, quote, execute, to_unicode, u, StringIO, escape,
     to_unicode_string)
@@ -591,9 +591,26 @@ class Interaction(object):
         self.db.send('Reset')
 
     def do_diff(self, data):
-        todiff = data.split()
-        html = difflib.HtmlDiff(1).make_table(todiff[0], todiff[1])
+        first, second = data.split()
+        first = eval(first, self.get_globals(), self.locals[self.index])
+        second = eval(second, self.get_globals(), self.locals[self.index])
+        if not isinstance(first, (list)):
+            if not isinstance(first, str):
+                first = '%s' % first
+            first = first.split()
+        if not isinstance(second, (list)):
+            if not isinstance(second, str):
+                second = '%s' % second
+            second = second.split()
+        diff = difflib.unified_diff(
+            first, second, fromfile="1ˢᵗ var", tofile="2ⁿᵈ var")
+        html = []
+        for line in diff:
+            if line.startswith('++') or line.startswith('--'):
+                html.append(line)
+            else:
+                html.append(line + '\n')
         self.db.send('Diff|%s' % dump({
-            'for': 'Diff Result',
+            'for': 'Diff Result :',
             'val': html
         }))
