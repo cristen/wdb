@@ -11,7 +11,6 @@ body, html
   height: 100%
   margin: 0
 
-
 #wdb
   display: flex
   flex-direction: column
@@ -50,6 +49,7 @@ body, html
 
       #interpreter
         flex: 1
+        overflow-y: auto
 
     #traceback
       flex: 3
@@ -111,10 +111,10 @@ h1
     overflow: hidden
 
 code
-  font: $code-font
+  font-family: "Source Code Pro" !important
   display: block
-  white-space: pre
-
+  white-space: pre-wrap
+  word-break: break-all
 
 #source-editor
   > .CodeMirror
@@ -143,14 +143,14 @@ code
       border: none
 
 #eval
-  width: 94%
-  vertical-align: top
-  padding: 0
-  margin: 0
-  border: none
-  outline: none
   background-color: transparent
+  border: none
+  flex: 1
+  margin: 0
+  outline: none
   overflow: hidden
+  padding: 0
+  vertical-align: top
 
 #interpreter
   font: $code-font
@@ -163,10 +163,13 @@ code
     content: ">>> "
 
 #prompt
+  display: flex
+
   textarea
     color: $pln
     font: $code-font
-    font-weight: bold
+    margin-left: 0.5em
+    resize: none
 
 #completions
   .base
@@ -302,6 +305,7 @@ code
     color: $code-hl-break-ask-fg
 
 a.inspect
+  display: inline-block
   text-decoration: none
   background-color: $inspect-fg
   border: 1px solid $inspect-middle
@@ -332,6 +336,10 @@ a.inspect
 .backsearched
   text-decoration: underline
 
+.out
+  code, a
+    display: inline
+
 .object
   border: 1px solid $obj-border
   border-spacing: 0
@@ -339,14 +347,7 @@ a.inspect
   width: 100%
   font-size: 0.85em
 
-  tbody
-    td
-      border: 2px solid $obj-inner-border
-      padding: 0.2em 0.5em
-    &.hidden:not(.toggle)
-      display: none
-    &:not(.toggle) tr > :first-child
-      vertical-align: top
+  thead
     &.toggle
       &:hover
         background-color: $obj-hover
@@ -357,6 +358,18 @@ a.inspect
           float: right
       &.hidden td:after
         content: '[+]'
+
+  tbody, thead
+    td
+      border: 2px solid $obj-inner-border
+      padding: 0.2em 0.5em
+      min-width: 100px
+
+  tbody
+    &.hidden
+      display: none
+    tr > :first-child
+      vertical-align: top
 
     table td
       border: none
