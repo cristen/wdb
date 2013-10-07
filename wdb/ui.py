@@ -1,4 +1,4 @@
-
+# *-* coding: utf-8 *-*
 from ._compat import (
     dumps, JSONEncoder, quote, execute, to_unicode, u, StringIO, escape,
     to_unicode_string)
