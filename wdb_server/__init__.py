@@ -134,7 +134,7 @@ class WebSocketHandler(tornado.websocket.WebSocketHandler):
             message = message.replace(b'Server|', b'')
             if message == b'GetBreaks':
                 socket = Sockets.sockets.get(self.uuid)
-                bps = pickle.dumps(global_breakpoints)
+                bps = pickle.dumps(global_breakpoints, protocol=2)
                 socket.write(pack("!i", len(bps)))
                 socket.write(bps)
             if message.startswith(b'AddBreak|'):

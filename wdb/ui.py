@@ -10,7 +10,6 @@ from logging import getLogger
 from shutil import move
 from tempfile import gettempdir
 from base64 import b64encode
-import pickle
 
 try:
     from cutter import cut

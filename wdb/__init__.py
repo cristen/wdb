@@ -310,7 +310,7 @@ class Wdb(object):
         self.breakpoints.add(breakpoint)
         if not temporary:
             self._socket.send_bytes(
-                b'Server|AddBreak|' + pickle.dumps(breakpoint))
+                b'Server|AddBreak|' + pickle.dumps(breakpoint, protocol=2))
 
         log.info('Breakpoint %r added' % breakpoint)
 
@@ -330,7 +330,7 @@ class Wdb(object):
             self.breakpoints.remove(breakpoint)
             if not temporary:
                 self._socket.send_bytes(
-                    b'Server|RmBreak|' + pickle.dumps(breakpoint))
+                    b'Server|RmBreak|' + pickle.dumps(breakpoint, protocol=2))
             log.info('Breakpoint %r removed' % breakpoint)
         except:
             log.info('Breakpoint %r not removed: not found' % breakpoint)
